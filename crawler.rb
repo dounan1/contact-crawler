@@ -8,7 +8,6 @@ class Crawler
     urls = CSV.read('urls.csv', "r:ISO-8859-1")
     url ||= 'http://www.example.com'
 
-
     results = {url:url, emails:[], domains:[], forms:[]}
 
     Anemone.crawl(url) do |anemone|
@@ -20,7 +19,7 @@ class Crawler
       end
 
       anemone.after_crawl do
-        # write(results)
+        write(results)
       end
     end
   end
@@ -30,15 +29,12 @@ class Crawler
     return if page.nil?
 
     emails = find_emails(page)
-    domains = find_domains(emails)
     forms = find_forms(page)
 
     p 'email found at : ' + emails.join('|') unless emails.empty?
-    p 'domain found at : ' + domains.join('|') unless domains.empty?
     p 'form found at: ' + forms unless forms.nil?
 
     results[:emails] << emails unless emails.empty?
-    results[:domains] << domains unless domains.empty?
     results[:forms] << forms unless forms.nil?
 
     # emails.each { |email| results << { url: page.url, email: email, form: nil}; p email } unless emails.nil?
@@ -60,10 +56,16 @@ class Crawler
     domains = []
 
     emails.each do |email|
-     domains << email.gsub(/.+@([^.]+).+/, '\1')
+     domains << find_domain(email)
     end
 
     domains
+  end
+
+  def self.find_domain(email)
+    return if email.nil?
+
+    email.gsub(/.+@([^.]+).+/, '\1')
   end
 
   def self.find_forms(page)
@@ -123,7 +125,22 @@ class Crawler
   end
 
   def self.rows_from(results)
+    emails = results[:emails].compact.uniq.flatten
+    forms = results[:forms].compact.uniq.flatten
+
+    rows = []
+
+    emails.each do |email|
+      rows << [ results[:url] , email, find_domain(email), nil ]
+    end
+
+    forms.each do |form|
+      rows << [ results[:url] , nil, nil, form ]
+    end
+
+    rows
   end
+
 end
 
 Crawler.crawl ARGV[0]
