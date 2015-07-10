@@ -66,15 +66,18 @@ class Crawler
 
     def find_emails(page)
       return [] if page.body.nil?
+      find_all_emails(page)
+    end
+
+    def find_all_emails(page)
       page.body.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i).to_a
     end
 
-    def find_all_emails
-      page.body.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i).to_a
+    def find_whitelisted_emails(page)
+      reg = /[A-Z0-9._%+-]+@gmail.com/i
+      page.body.scan(reg).uniq
     end
 
-    
-  
     def find_domains(emails)
       return [] if emails.empty?
   
