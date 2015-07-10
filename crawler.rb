@@ -4,25 +4,40 @@ require 'csv'
 
 class Crawler
   class << self
-    
 
-    def crawl(url)
-      urls = CSV.read('urls.csv', "r:ISO-8859-1")
-      url ||= 'http://www.example.com'
-  
-      results = {url:url, emails:[], domains:[], forms:[]}
-  
-      Anemone.crawl(url) do |anemone|
-        anemone.focus_crawl { |page| links_without_queries_on page }
-  
-        anemone.on_every_page do |page|
-          p page.url.to_s
-          find_contacts(page, results)
+    def crawl(arg)
+
+      CSV.open('results.csv', 'w') do |csv|
+        csv << ['Url', 'Email', 'Domain', 'Contact'] # write header
+      end
+
+      urls(arg).each do |url|
+
+        results = {url:url, emails:[], domains:[], forms:[]}
+
+        Anemone.crawl(url) do |anemone|
+          anemone.focus_crawl { |page| links_without_queries_on page }
+
+          anemone.on_every_page do |page|
+            p page.url.to_s
+            find_contacts(page, results)
+          end
+
+          anemone.after_crawl do
+            write(results)
+          end
         end
-  
-        anemone.after_crawl do
-          write(results)
-        end
+      end
+    end
+
+    def urls(arg)
+      return ['http://www.example.com'] if arg.nil?
+
+      if arg.include?('csv')
+        csv = CSV.read(arg, "r:ISO-8859-1")
+        return csv.map{|row| row[1]}
+      else
+        return [arg]
       end
     end
   
@@ -116,10 +131,7 @@ class Crawler
   
     def write(results)
   
-      CSV.open('results.csv', 'w') do |csv|
-  
-        csv << ['Url', 'Email', 'Domain', 'Contact'] # write header
-  
+      CSV.open('results.csv', 'ab') do |csv|
         rows_from(results).each do |row| # write results
           csv << row
         end
