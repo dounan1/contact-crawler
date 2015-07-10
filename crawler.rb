@@ -12,20 +12,23 @@ class Crawler
       end
 
       urls(arg).each do |url|
+        analyze(url)
+      end
+    end
 
-        results = {url:url, emails:[], domains:[], forms:[]}
+    def analyze(url)
+      results = {url: url, emails: [], domains: [], forms: []}
 
-        Anemone.crawl(url) do |anemone|
-          anemone.focus_crawl { |page| permitted_urls(page) }
+      Anemone.crawl(url) do |anemone|
+        anemone.focus_crawl { |page| permitted_urls(page) }
 
-          anemone.on_every_page do |page|
-            p page.url.to_s
-            find_contacts(page, results)
-          end
+        anemone.on_every_page do |page|
+          p page.url.to_s
+          find_contacts(page, results)
+        end
 
-          anemone.after_crawl do
-            write(results)
-          end
+        anemone.after_crawl do
+          write(results)
         end
       end
     end
