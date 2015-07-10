@@ -16,7 +16,7 @@ class Crawler
         results = {url:url, emails:[], domains:[], forms:[]}
 
         Anemone.crawl(url) do |anemone|
-          anemone.focus_crawl { |page| links_without_queries_on page }
+          anemone.focus_crawl { |page| permitted_urls(page) }
 
           anemone.on_every_page do |page|
             p page.url.to_s
@@ -30,6 +30,11 @@ class Crawler
       end
     end
 
+    def permitted_urls(page)
+      blacklist = ['youtube.com']
+      page.links.select { |link| link.query.nil? && !blacklist.include?(link.host) }
+    end
+
     def urls(arg)
       return ['http://www.example.com'] if arg.nil?
 
@@ -40,32 +45,35 @@ class Crawler
         return [arg]
       end
     end
-  
+
     def find_contacts(page, results)
-  
+
       return if page.nil?
-  
+
       emails = find_emails(page)
       forms = find_forms(page)
-  
+
       p 'email found at : ' + emails.join('|') unless emails.empty?
       p 'form found at: ' + forms unless forms.nil?
-  
+
       results[:emails] << emails unless emails.empty?
       results[:forms] << forms unless forms.nil?
-  
+
       # emails.each { |email| results << { url: page.url, email: email, form: nil}; p email } unless emails.nil?
       # forms.each { |form| results << { url: page.url, email: nil, form: form }; p form } unless forms.nil?
     end
-  
-    def links_without_queries_on(page)
-      page.links.select { |link| link.query.nil? }
-    end
-  
+
+
     def find_emails(page)
-      return if page.body.nil?
+      return [] if page.body.nil?
       page.body.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i).to_a
     end
+
+    def find_all_emails
+      page.body.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i).to_a
+    end
+
+    
   
     def find_domains(emails)
       return [] if emails.empty?
