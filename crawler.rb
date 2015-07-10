@@ -34,8 +34,8 @@ class Crawler
     end
 
     def permitted_urls(page)
-      blacklist = ['youtube.com']
-      page.links.select { |link| link.query.nil? && !blacklist.include?(link.host) }
+      blacklist = ['www.youtube.com', 'youtube.com']
+      page.links.select { |link| link.query.nil? && !blacklist.include?(link.host)}
     end
 
     def urls(arg)
