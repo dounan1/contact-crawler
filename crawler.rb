@@ -11,9 +11,7 @@ class Crawler
         csv << ['Url', 'Email', 'Domain', 'Contact'] # write header
       end
 
-      urls(input).each do |url|
-        analyze(url, link_limit(limit))
-      end
+      analyze(urls(input), link_limit(limit))
     end
 
     def link_limit(limit)
