@@ -103,11 +103,7 @@ class Crawler
     end
 
     def find_all_emails(page)
-      regular_emails = page.body.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i).to_a
-      # at_emails = page.body.match(/.*at.*\.[A-Z]{2,4}/i).to_a
-      # at_dotted_emails = page.body.match(/.*at.*dot.*/i).to_a
-
-      regular_emails
+      page.body.match(/[a-zA-Z0-9\._\-]{3,}(@|AT|\s(at|AT)\s|\s*[\[\(\{]\s*(at|AT)\s*[\]\}\)]\s*)[a-zA-Z]{3,}(\.|DOT|\s(dot|DOT)\s|\s*[\[\(\{]\s*(dot|DOT)\s*[\]\}\)]\s^*)[a-zA-Z]{2,}((\.|DOT|\s(dot|DOT)\s|\s*[\[\(\{]\s*(dot|DOT)\s*[\]\}\)]\s*)[a-zA-Z]{2,})?$/).to_a
     end
 
     def find_whitelisted_emails(page)
@@ -139,7 +135,7 @@ class Crawler
       return if page.doc.nil?
 
       contact_form_found = false;
-  
+
       #search for contact form
       forms = page.doc.search('form')
 
