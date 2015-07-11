@@ -43,8 +43,7 @@ class ContactCrawler
     end
 
     def limit_to_contact_pages(link)
-      path = link.path.downcase
-      path.include?('contact') || path.include?('about') || path.include?('info')
+      link.path.downcase =~ /(contact|about|connect)/
     end
   end
 end
