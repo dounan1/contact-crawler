@@ -22,7 +22,7 @@ class Crawler
       Anemone.crawl(url) do |anemone|
         anemone.focus_crawl { |page| permitted_urls(page) }
 
-        anemone.on_pages_like(/contact/i) do |page|
+        anemone.on_every_page do |page|
           p page.url.to_s
 
           # p 'body: ' + page.body.to_s
@@ -41,8 +41,15 @@ class Crawler
     end
 
     def permitted_urls(page)
+      page.links.select { |link| targeted(link) }
+    end
+
+    def targeted(link)
       blacklist = ['www.youtube.com', 'youtube.com']
-      page.links.slice(0..20).select { |link| link.query.nil? && !blacklist.include?(link.host)}
+
+      link.query.nil? &&
+        !blacklist.include?(link.host) &&
+          (link.path.downcase.include?('contact') || link.path.downcase.include?('about'))
     end
 
     def urls(arg)
@@ -143,11 +150,11 @@ class Crawler
     end
   
     def contact_form_search(form)
-      p form.content
+      # p form.content
       email_field_found = !form.content.match(/email/i).nil?
       subject_field_found = !form.content.match(/subject/i).nil?
-      p 'email form found: ' + email_field_found.to_s
-      p 'subject form found: ' + subject_field_found.to_s
+      # p 'email form found: ' + email_field_found.to_s
+      # p 'subject form found: ' + subject_field_found.to_s
       email_field_found && subject_field_found
     end
   
