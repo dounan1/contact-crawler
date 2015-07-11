@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'anemone'
-require 'csv'
+require './csv_writer'
 require './analyzer'
 require './contact_crawler'
 
@@ -9,9 +9,7 @@ class Crawler
 
     def crawl(input, limit)
 
-      CSV.open('results.csv', 'w') do |csv|
-        csv << ['Url', 'Email', 'Domain', 'Contact'] # write header
-      end
+      CsvWriter.header
 
       ContactCrawler.crawl(urls(input), link_limit(limit))
     end
