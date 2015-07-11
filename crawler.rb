@@ -11,7 +11,20 @@ class Crawler
 
       CsvWriter.header
 
-      ContactCrawler.crawl(urls(input), link_limit(limit))
+      urls(input).each do |url|
+        ContactCrawler.crawl(friendly(url), link_limit(limit))
+      end
+    end
+
+    def friendly(url)
+
+      lowercase_url = url.downcase
+
+      [ lowercase_url, new_url(lowercase_url) ]
+    end
+
+    def new_url(lowercase_url)
+      lowercase_url =~ /www\./ ? lowercase_url.gsub(/www\./,'') : lowercase_url.gsub(/(https?:\/\/)/i, "http://www.")
     end
 
     def link_limit(limit)
