@@ -5,22 +5,29 @@ require 'csv'
 class Crawler
   class << self
 
-    def crawl(arg)
+    def crawl(input, limit)
 
       CSV.open('results.csv', 'w') do |csv|
         csv << ['Url', 'Email', 'Domain', 'Contact'] # write header
       end
 
-      urls(arg).each do |url|
-        analyze(url)
+      urls(input).each do |url|
+        analyze(url, link_limit(limit))
       end
     end
 
-    def analyze(url)
+    def link_limit(limit)
+      limit ||= '20'
+      p 'crawling with first ' + limit + ' links'
+
+      limit.to_i
+    end
+
+    def analyze(url, limit)
       results = {url: url, emails: [], domains: [], forms: []}
 
       Anemone.crawl(url) do |anemone|
-        anemone.focus_crawl { |page| permitted_urls(page) }
+        anemone.focus_crawl { |page| permitted_urls(page, limit) }
 
         anemone.on_every_page do |page|
           p page.url.to_s
@@ -40,8 +47,8 @@ class Crawler
       end
     end
 
-    def permitted_urls(page)
-      page.links.slice(0..20).select { |link| targeted(link) }
+    def permitted_urls(page, limit)
+      page.links.slice(0..limit).select { |link| targeted(link) }
     end
 
     def targeted(link)
@@ -193,4 +200,4 @@ class Crawler
   end
 end
 
-Crawler.crawl ARGV[0]
+Crawler.crawl ARGV[0], ARGV[1]
