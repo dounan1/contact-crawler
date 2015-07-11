@@ -18,8 +18,6 @@ class Crawler
 
     def link_limit(limit)
       limit ||= '20'
-      p 'crawling with first ' + limit + ' links'
-
       limit.to_i
     end
 
@@ -145,20 +143,6 @@ class Crawler
         end
       end
   
-      # return page.url if contact_form_found
-  
-      # email_input_exists = false;
-      # message_subject_exists = false;
-      # name_contact_exists = false;
-      #
-      # inputs = page.doc.search('form input')
-      # if inputs.any?
-      #   inputs.each do |form|
-      #     p form
-      #     #search for contact fields
-      #   end
-      # end
-  
       contact_form_found ? page.url.to_s : nil
     end
   
@@ -166,9 +150,15 @@ class Crawler
       # p form.content
       email_field_found = !form.content.match(/email/i).nil?
       subject_field_found = !form.content.match(/subject/i).nil?
+      comment_field_found = !form.content.match(/comment/i).nil?
+      message_field_found = !form.content.match(/message/i).nil?
+
       # p 'email form found: ' + email_field_found.to_s
       # p 'subject form found: ' + subject_field_found.to_s
-      email_field_found && subject_field_found
+      # p 'comment form found: ' + comment_field_found.to_s
+      # p 'message form found: ' + message_field_found.to_s
+
+      email_field_found && (subject_field_found || comment_field_found || message_field_found)
     end
   
     def write(results)
