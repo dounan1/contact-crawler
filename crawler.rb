@@ -60,7 +60,12 @@ class Crawler
       link.query.nil? &&
         !blacklist.include?(link.host) &&
           !link.path.include?(path_blacklist) &&
-            (link.path.downcase.include?('contact') || link.path.downcase.include?('about'))
+            limit_to_contact_pages(link)
+    end
+
+    def limit_to_contact_pages(link)
+      path = link.path.downcase
+      path.include?('contact') || path.include?('about') || path.include?('info')
     end
 
     def urls(arg)
