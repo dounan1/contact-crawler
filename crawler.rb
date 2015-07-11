@@ -19,13 +19,13 @@ class Crawler
       limit.to_i
     end
 
-    def analyze(url, limit)
-      results = {url: url, emails: [], domains: [], forms: []}
+    def analyze(urls, limit)
 
-      Anemone.crawl(url) do |anemone|
+      Anemone.crawl(urls) do |anemone|
         anemone.focus_crawl { |page| permitted_urls(page, limit) }
 
         anemone.on_every_page do |page|
+          results = {url: page.url.to_s, emails: [], domains: [], forms: []}
           p page.url.to_s
 
           # p 'body: ' + page.body.to_s
@@ -38,7 +38,6 @@ class Crawler
         end
 
         anemone.after_crawl do
-          write(results)
         end
       end
     end
@@ -92,6 +91,9 @@ class Crawler
 
       # emails.each { |email| results << { url: page.url, email: email, form: nil}; p email } unless emails.nil?
       # forms.each { |form| results << { url: page.url, email: nil, form: form }; p form } unless forms.nil?
+
+      write(results)
+
     end
 
 
