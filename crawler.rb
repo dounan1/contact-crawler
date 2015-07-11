@@ -41,7 +41,7 @@ class Crawler
     end
 
     def permitted_urls(page)
-      page.links.select { |link| targeted(link) }
+      page.links.slice(0..20).select { |link| targeted(link) }
     end
 
     def targeted(link)
