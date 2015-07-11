@@ -22,7 +22,7 @@ class Crawler
       Anemone.crawl(url) do |anemone|
         anemone.focus_crawl { |page| permitted_urls(page) }
 
-        anemone.on_every_page do |page|
+        anemone.on_pages_like(/contact/i) do |page|
           p page.url.to_s
 
           # p 'body: ' + page.body.to_s
@@ -40,9 +40,9 @@ class Crawler
       end
     end
 
-    def permitted_urls(page, limit = 20)
+    def permitted_urls(page)
       blacklist = ['www.youtube.com', 'youtube.com']
-      page.links.slice(0..limit).select { |link| link.query.nil? && !blacklist.include?(link.host)}
+      page.links.slice(0..20).select { |link| link.query.nil? && !blacklist.include?(link.host)}
     end
 
     def urls(arg)
