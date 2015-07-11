@@ -45,11 +45,17 @@ class Crawler
     end
 
     def targeted(link)
-      blacklist = ['www.youtube.com', 'youtube.com']
+      blacklist = ['www.youtube.com', 'youtube.com'] # reject megasites for now
+      path_blacklist = '.com' # reject recursively linked sites embedded in paths
+
+      #TODO: avoid recursion - make sure no part of the path repeats:
+      # eg. /red-line-custom-pages/index.php/red-line-custom-pages/index.php/
+      # this can then replace the path_blacklist
 
       link.query.nil? &&
         !blacklist.include?(link.host) &&
-          (link.path.downcase.include?('contact') || link.path.downcase.include?('about'))
+          !link.path.include?(path_blacklist) &&
+            (link.path.downcase.include?('contact') || link.path.downcase.include?('about'))
     end
 
     def urls(arg)
