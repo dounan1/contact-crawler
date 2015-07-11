@@ -4,8 +4,6 @@ class ContactCrawler
     def crawl(urls, limit)
 
       Anemone.crawl(urls) do |anemone|
-        anemone.focus_crawl { |page| permitted_urls(page, limit) }
-
         anemone.on_every_page do |page|
           results = {url: page.url.host.to_s, emails: [], domains: [], forms: []}
           p page.url.to_s
