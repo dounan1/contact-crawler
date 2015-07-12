@@ -7,6 +7,8 @@ class ContactCrawler
     def crawl(urls, limit)
 
       Anemone.crawl(urls) do |anemone|
+        results = []
+
         anemone.focus_crawl { |page| permitted_urls(page, limit) }
 
         anemone.on_every_page do |page|
@@ -19,12 +21,14 @@ class ContactCrawler
           # p 'doc nil? ' + page.doc.nil?.to_s
           # p 'body nil? ' + page.body.nil?.to_s
 
-          results = Analyzer.find_contacts(page)
+          results << Analyzer.find_contacts(page)
 
-          CsvWriter.write(rows_from(results))
         end
 
         anemone.after_crawl do
+          results.each do |result|
+            CsvWriter.write(rows_from(result))
+          end
         end
       end
     end
