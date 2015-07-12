@@ -4,7 +4,7 @@ require './csv_writer'
 class ContactCrawler
   class << self
 
-    def crawl(urls, limit)
+    def crawl(urls, whitelist, limit)
 
       results = []
 
