@@ -30,10 +30,10 @@ class FormFinder
       comment_field_found = !form.content.match(/comment/i).nil?
       message_field_found = !form.content.match(/message/i).nil?
 
-      # p 'email form found: ' + email_field_found.to_s
-      # p 'subject form found: ' + subject_field_found.to_s
-      # p 'comment form found: ' + comment_field_found.to_s
-      # p 'message form found: ' + message_field_found.to_s
+      p 'email form found: ' + email_field_found.to_s
+      p 'subject form found: ' + subject_field_found.to_s
+      p 'comment form found: ' + comment_field_found.to_s
+      p 'message form found: ' + message_field_found.to_s
 
       email_field_found && (subject_field_found || comment_field_found || message_field_found)
     end

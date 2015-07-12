@@ -12,7 +12,6 @@ class ContactCrawler
 
         anemone.on_every_page do |page|
           p page.url.to_s
-
           # p 'body: ' + page.body.to_s
           # p 'links: ' + page.links.to_s
           # p 'doc: ' + page.doc.content.to_s
