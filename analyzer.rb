@@ -1,14 +1,15 @@
 require './domain_finder'
 require './email_finder'
 require './form_finder'
-require './csv_writer'
 
 class Analyzer
   class << self
 
-    def find_contacts(page, results)
+    def find_contacts(page)
 
       return if page.nil?
+
+      results = {url: page.url.host.to_s, emails: [], domains: [], forms: []}
 
       emails = EmailFinder.find_emails(page)
       forms = FormFinder.find_forms(page)
@@ -22,26 +23,7 @@ class Analyzer
       # emails.each { |email| results << { url: page.url, email: email, form: nil}; p email } unless emails.nil?
       # forms.each { |form| results << { url: page.url, email: nil, form: form }; p form } unless forms.nil?
 
-      CsvWriter.write(rows_from(results))
-
-    end
-
-
-    def rows_from(results)
-      emails = results[:emails].compact.uniq.flatten
-      forms = results[:forms].compact.uniq.flatten
-
-      rows = []
-
-      emails.each do |email|
-        rows << [ results[:url] , email, DomainFinder.find_domain(email), nil ]
-      end
-
-      forms.each do |form|
-        rows << [ results[:url] , nil, nil, form ]
-      end
-
-      rows
+      results
     end
   end
 end
