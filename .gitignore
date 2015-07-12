@@ -1,3 +1,4 @@
 .idea/
 *.csv
 *.xlsx
+.ruby-version
