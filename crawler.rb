@@ -12,7 +12,9 @@ class Crawler
 
       CsvWriter.header
 
-      ContactCrawler.crawl(urls(inputs), link_limit(limit))
+      urls(inputs).each do |url|
+        ContactCrawler.crawl(url, link_limit(limit))
+      end
     end
 
     def link_limit(limit)
