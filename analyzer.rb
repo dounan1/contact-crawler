@@ -9,7 +9,7 @@ class Analyzer
 
       return if page.nil?
 
-      results = {url: page.url.host.to_s, emails: [], subpages: page.url, forms: []}
+      results = {url: page.url.host.to_s, emails: [], subpages: page.url.to_s, forms: []}
 
       emails = EmailFinder.find_emails(page, email_patterns)
       forms = FormFinder.find_forms(page)

@@ -28,11 +28,17 @@ class ContactCrawler
         end
 
         anemone.after_crawl do
+          CsvWriter.no_results([urls].flatten) if is_empty(results)
+
           results.each do |result|
             CsvWriter.write(rows_from(result))
           end
         end
       end
+    end
+
+    def is_empty(results)
+      results.map{ |r| r[:emails][0] }.compact.empty? && results.map{ |r| r[:forms][0] }.compact.empty?
     end
 
     def rows_from(results)
