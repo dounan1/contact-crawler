@@ -7,7 +7,7 @@ class CsvWriter
 
     def header
       CSV.open(OUTPUT_FILE, 'w') do |csv|
-        csv << ['Url', 'Email', 'Domain', 'Contact'] # write header
+        csv << ['Website Url', 'e-mail', 'e-mail url', 'contact page URL'] # write header
       end
     end
 

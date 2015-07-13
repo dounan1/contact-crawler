@@ -47,8 +47,10 @@ if ARGV.empty?
 usage: crawler <inputfile> [email-whitelist] [link-limit]
 
   inputfile: list of urls to crawl in csv file
-  link-limit: maximum number of links crawled per site
-  email-filter: csv file with list of emails format to search eg. *.gmail.com, info@*.com
+  email-filter (optional): csv file with list of emails format to search eg. *.gmail.com, info@*.com
+  link-limit (optional): maximum number of links crawled per site
+
+output: results.csv
   /
 else
   if !ARGV[1].nil?
