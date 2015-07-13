@@ -1,10 +1,12 @@
+require 'anemone'
 require './csv_writer'
+require './analyzer'
 
 
 class ContactCrawler
   class << self
 
-    def crawl(urls, whitelist, limit)
+    def crawl(urls, email_patterns, limit)
 
       results = []
 
@@ -22,7 +24,7 @@ class ContactCrawler
           # p 'doc nil? ' + page.doc.nil?.to_s
           # p 'body nil? ' + page.body.nil?.to_s
 
-          results << Analyzer.find_contacts(page)
+          results << Analyzer.find_contacts(page, email_patterns)
         end
 
         anemone.after_crawl do

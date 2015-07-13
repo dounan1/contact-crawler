@@ -5,13 +5,13 @@ require './form_finder'
 class Analyzer
   class << self
 
-    def find_contacts(page)
+    def find_contacts(page, email_patterns)
 
       return if page.nil?
 
       results = {url: page.url.host.to_s, emails: [], domains: [], forms: []}
 
-      emails = EmailFinder.find_emails(page)
+      emails = EmailFinder.find_emails(page, email_patterns)
       forms = FormFinder.find_forms(page)
 
       p 'email found at : ' + emails.join('|') unless emails.empty?

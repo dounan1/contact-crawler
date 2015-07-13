@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
-require 'anemone'
-require './csv_writer'
-require './analyzer'
+require 'csv'
 require './contact_crawler'
 require './url_cleaner'
 
@@ -13,13 +11,12 @@ class Crawler
       CsvWriter.header
 
       urls(sites).each do |url|
-        ContactCrawler.crawl(url, whitelist, link_limit(limit))
+        ContactCrawler.crawl(url, emails(whitelist), link_limit(limit))
       end
     end
 
     def link_limit(limit)
       limit ||= '20'
-      p 'limit: ' + limit
       limit.to_i
     end
 
@@ -33,6 +30,13 @@ class Crawler
         return csv.map{ |row| UrlCleaner.friendly(row[1]) }.flatten
       else
         return [arg]
+      end
+    end
+
+    def emails(whitelist)
+      if !whitelist.nil?
+        list = CSV.read(whitelist, "r:ISO-8859-1").flatten.compact
+        list.map{ |pattern| pattern.gsub("*",'[A-Z0-9._%+-]+') }
       end
     end
   end
