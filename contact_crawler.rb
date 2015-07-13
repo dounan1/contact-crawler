@@ -42,11 +42,11 @@ class ContactCrawler
       rows = []
 
       emails.each do |email|
-        rows << [ results[:url] , email, DomainFinder.find_domain(email), nil ]
+        rows << [ results[:url] , email, results[:subpages], nil ]
       end
 
       forms.each do |form|
-        rows << [ results[:url] , nil, nil, form ]
+        rows << [ results[:url] , nil, results[:subpages], form ]
       end
 
       rows
