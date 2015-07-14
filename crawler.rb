@@ -26,7 +26,7 @@ class Crawler
         csv = CSV.read(arg, "r:ISO-8859-1")
         return csv.map{ |row| { url: UrlCleaner.friendly(row[1]), username: row[0] } }
       else
-        return { url: [arg], username: [''] }
+        return [{ url: [arg], username: [''] }]
       end
     end
 

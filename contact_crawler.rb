@@ -32,7 +32,7 @@ class ContactCrawler
         end
 
         anemone.after_crawl do
-          CsvWriter.no_results([urls].flatten.first) if is_empty(results)
+          CsvWriter.no_results([[urls].flatten.first]) if is_empty(results)
 
           results.each do |result|
             CsvWriter.write(rows_from(result, urls, username))
