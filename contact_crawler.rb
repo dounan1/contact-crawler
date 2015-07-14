@@ -35,7 +35,7 @@ class ContactCrawler
           CsvWriter.no_results([urls].flatten) if is_empty(results)
 
           results.each do |result|
-            CsvWriter.write(rows_from(result))
+            CsvWriter.write(rows_from(result, urls))
           end
         end
       end
@@ -45,18 +45,19 @@ class ContactCrawler
       results.map{ |r| r[:emails][0] }.compact.empty? && results.map{ |r| r[:forms][0] }.compact.empty?
     end
 
-    def rows_from(results)
+    def rows_from(results, urls)
       emails = results[:emails].compact.uniq.flatten
       forms = results[:forms].compact.uniq.flatten
+      url = [urls].flatten.join('|')
 
       rows = []
 
       emails.each do |email|
-        rows << [ results[:url] , email, results[:subpages], nil ]
+        rows << [ url , email, results[:subpages], nil ]
       end
 
       forms.each do |form|
-        rows << [ results[:url] , nil, results[:subpages], form ]
+        rows << [ url , nil, results[:subpages], form ]
       end
 
       rows
