@@ -14,7 +14,7 @@ class ContactCrawler
 
       results = []
 
-      Anemone.crawl(urls, skip_query_strings: true, ) do |anemone|
+      Anemone.crawl(urls, depth_limit: 4, skip_query_strings: true, ) do |anemone|
 
         anemone.focus_crawl { |page| permitted_urls(page, limit) }
 
