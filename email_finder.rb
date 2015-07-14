@@ -12,7 +12,7 @@ class EmailFinder
 
     def find_all_emails(page)
 
-      body = page.body.force_encoding('UTF-8')
+      body = page.body
 
       results = []
 

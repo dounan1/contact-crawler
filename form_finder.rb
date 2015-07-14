@@ -24,13 +24,13 @@ class FormFinder
     end
 
     def contact_form_search(form)
-      content = form.content.force_encoding('UTF-8')
+      content = form.content
       
       # p form.content
-      email_field_found = content.match(/email/i).nil?
-      subject_field_found = content.match(/subject/i).nil?
-      comment_field_found = content.match(/comment/i).nil?
-      message_field_found = content.match(/message/i).nil?
+      email_field_found = !content.match(/email/i).nil?
+      subject_field_found = !content.match(/subject/i).nil?
+      comment_field_found = !content.match(/comment/i).nil?
+      message_field_found = !content.match(/message/i).nil?
 
       # p 'email form found: ' + email_field_found.to_s
       # p 'subject form found: ' + subject_field_found.to_s

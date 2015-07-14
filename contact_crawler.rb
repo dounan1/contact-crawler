@@ -4,13 +4,17 @@ require './analyzer'
 
 
 class ContactCrawler
+  PATH_BLACKLIST = ['.jpg', '.pdf', 'gif'] # want contact.php or .asp, but not any unparsable files
+  HOST_BLACKLIST = [] # e.g. third party hosts like instagram, youtube...
+
+
   class << self
 
     def crawl(urls, email_patterns, limit)
 
       results = []
 
-      Anemone.crawl(urls) do |anemone|
+      Anemone.crawl(urls, skip_query_strings: true, ) do |anemone|
 
         anemone.focus_crawl { |page| permitted_urls(page, limit) }
 
@@ -63,17 +67,17 @@ class ContactCrawler
     end
 
     def targeted(link)
-      blacklist = ['www.youtube.com', 'youtube.com'] # reject megasites for now
-      path_blacklist = '.com' # reject recursively linked sites embedded in paths
-
-      #TODO: avoid recursion - make sure no part of the path repeats:
-      # eg. /red-line-custom-pages/index.php/red-line-custom-pages/index.php/
-      # this can then replace the path_blacklist
-
-      link.query.nil? &&
-          !blacklist.include?(link.host) &&
-          !link.path.include?(path_blacklist) &&
+      !on_blacklisted_hosts(link.host) &&
+        !on_blacklisted_paths(link.path) &&
           limit_to_contact_pages(link)
+    end
+
+    def on_blacklisted_paths(path)
+      PATH_BLACKLIST.inject(false) {|r, blacklisted| r || path.include?(blacklisted) }
+    end
+
+    def on_blacklisted_hosts(host)
+      HOST_BLACKLIST.inject(false) {|r, blacklisted| r || host.include?(blacklisted) }
     end
 
     def limit_to_contact_pages(link)
