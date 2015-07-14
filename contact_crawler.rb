@@ -4,7 +4,7 @@ require './analyzer'
 
 
 class ContactCrawler
-  PATH_BLACKLIST = ['.jpg', '.pdf', 'gif'] # want contact.php or .asp, but not any unparsable files
+  PATH_BLACKLIST = ['.jpg', '.pdf', '.gif', '.png'] # want contact.php or .asp, but not any unparsable files
   HOST_BLACKLIST = [] # e.g. third party hosts like instagram, youtube...
 
 
