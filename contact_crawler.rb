@@ -10,7 +10,7 @@ class ContactCrawler
 
   class << self
 
-    def crawl(urls, email_patterns, limit)
+    def crawl(urls, email_patterns, limit, username)
 
       results = []
 
@@ -32,10 +32,10 @@ class ContactCrawler
         end
 
         anemone.after_crawl do
-          CsvWriter.no_results([urls].flatten) if is_empty(results)
+          CsvWriter.no_results([urls].flatten.first) if is_empty(results)
 
           results.each do |result|
-            CsvWriter.write(rows_from(result, urls))
+            CsvWriter.write(rows_from(result, urls, username))
           end
         end
       end
@@ -45,19 +45,19 @@ class ContactCrawler
       results.map{ |r| r[:emails][0] }.compact.empty? && results.map{ |r| r[:forms][0] }.compact.empty?
     end
 
-    def rows_from(results, urls)
+    def rows_from(results, urls, username)
       emails = results[:emails].compact.uniq.flatten
       forms = results[:forms].compact.uniq.flatten
-      url = [urls].flatten.join('|')
+      url = [urls].flatten.first
 
       rows = []
 
       emails.each do |email|
-        rows << [ url , email, results[:subpages], nil ]
+        rows << [ username, url , email, results[:subpages], nil ]
       end
 
       forms.each do |form|
-        rows << [ url , nil, results[:subpages], form ]
+        rows << [ username, url , nil, results[:subpages], form ]
       end
 
       rows

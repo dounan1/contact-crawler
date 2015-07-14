@@ -8,7 +8,7 @@ class CsvWriter
 
     def header
       CSV.open(RESULT_FILE, 'w') do |csv|
-        csv << ['Website Url', 'e-mail', 'e-mail url', 'contact page URL'] # write header
+        csv << ["Name", 'Website Url', 'e-mail', 'e-mail url', 'contact page URL'] # write header
       end
     end
 
@@ -17,6 +17,12 @@ class CsvWriter
         results.each do |row| # write results
           csv << row
         end
+      end
+    end
+
+    def no_results_header
+      CSV.open(NO_RESULTS, 'w') do |csv|
+        csv << ["Sites without results"] # write header
       end
     end
 

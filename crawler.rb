@@ -6,12 +6,13 @@ require './url_cleaner'
 class Crawler
   class << self
 
-    def crawl(sites, whitelist, limit)
+    def crawl(input, whitelist, limit)
 
       CsvWriter.header
+      CsvWriter.no_results_header
 
-      urls(sites).each do |url|
-        ContactCrawler.crawl(url, emails(whitelist), link_limit(limit))
+      sites(input).each do |site|
+        ContactCrawler.crawl(site[:url], emails(whitelist), link_limit(limit), site[:username])
       end
     end
 
@@ -20,16 +21,12 @@ class Crawler
       limit.to_i
     end
 
-    def urls(arg)
-      if arg.nil?
-        return ['http://www.example.com']
-      end
-
+    def sites(arg)
       if arg.include?('csv')
         csv = CSV.read(arg, "r:ISO-8859-1")
-        return csv.map{ |row| UrlCleaner.friendly(row[1]) }.flatten
+        return csv.map{ |row| { url: UrlCleaner.friendly(row[1]), username: row[0] } }
       else
-        return [arg]
+        return { url: [arg], username: [''] }
       end
     end
 
