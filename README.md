@@ -5,4 +5,5 @@ usage: crawler <inputfile> [email-whitelist] [link-limit]
   email-filter (optional): csv file with list of emails format to search eg. *.gmail.com, info@*.com
   link-limit (optional): maximum number of links crawled per site
 
-output: results.csv
+outputs: results.csv - list of sites with contacts found
+         no_results.csv - list of sites without contacts found
