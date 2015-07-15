@@ -12,7 +12,7 @@ class EmailFinder
 
     def find_all_emails(page)
 
-      body = page.body
+      body = page.body.scrub
 
       results = []
 

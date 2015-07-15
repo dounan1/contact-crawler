@@ -24,7 +24,7 @@ class FormFinder
     end
 
     def contact_form_search(form)
-      content = form.content
+      content = form.content.scrub
       
       # p form.content
       email_field_found = !content.match(/email/i).nil?
