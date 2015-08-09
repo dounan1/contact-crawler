@@ -19,19 +19,5 @@ class CsvWriter
         end
       end
     end
-
-    def no_results_header
-      CSV.open(NO_RESULTS, 'w') do |csv|
-        csv << ["Sites without results"] # write header
-      end
-    end
-
-    def no_results(sites)
-      CSV.open(NO_RESULTS, 'ab') do |csv|
-        sites.each do |row| # write results
-          csv << [row]
-        end
-      end
-    end
   end
 end

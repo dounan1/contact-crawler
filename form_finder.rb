@@ -2,7 +2,7 @@ class FormFinder
   class << self
 
     def find_forms(page)
-      # has a form with email field and a message body
+      # find first form with email field and a message body
 
       return if page.doc.nil?
 

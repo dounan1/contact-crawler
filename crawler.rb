@@ -9,10 +9,9 @@ class Crawler
     def crawl(input, whitelist, limit)
 
       CsvWriter.header
-      CsvWriter.no_results_header
 
       sites(input).each do |site|
-        ContactCrawler.crawl(site[:url], emails(whitelist), link_limit(limit), site[:username])
+        ContactCrawler.crawl(site[:site], site[:url], emails(whitelist), link_limit(limit), site[:username])
       end
     end
 
@@ -24,7 +23,7 @@ class Crawler
     def sites(arg)
       if arg.include?('csv')
         csv = CSV.read(arg, "r:ISO-8859-1")
-        return csv.map{ |row| { url: UrlCleaner.friendly(row[1]), username: row[0] } }
+        return csv.map{ |row| { site: row[1], url: UrlCleaner.friendly(row[1]), username: row[0] } }
       else
         return [{ url: [arg], username: [''] }]
       end
