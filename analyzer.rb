@@ -1,4 +1,3 @@
-require './domain_finder'
 require './email_finder'
 require './form_finder'
 require './result'
