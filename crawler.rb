@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'csv'
 require './contact_crawler'
-require './url_cleaner'
+require './sites'
 
 class Crawler
   class << self
@@ -10,7 +10,7 @@ class Crawler
 
       CsvWriter.header
 
-      sites(input).each do |site|
+      Sites.parse(input).each do |site|
         ContactCrawler.crawl(site[:site], site[:url], emails(whitelist), link_limit(limit), site[:username])
       end
     end
@@ -20,14 +20,6 @@ class Crawler
       limit.to_i
     end
 
-    def sites(arg)
-      if arg.include?('csv')
-        csv = CSV.read(arg, "r:ISO-8859-1")
-        return csv.map{ |row| { site: row[1], url: UrlCleaner.friendly(row[1]), username: row[0] } }
-      else
-        return [{ url: [arg], username: [''] }]
-      end
-    end
 
     def emails(whitelist)
       if !whitelist.nil?
