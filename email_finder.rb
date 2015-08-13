@@ -1,5 +1,8 @@
 class EmailFinder
-  @@patterns = ['[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}']
+  DOTTED_EMAILS = ['[a-zA-Z0-9\._\-]{3,}(@|AT|\s(at|AT)\s|\s*[\[\(\{]\s*(at|AT)\s*[\]\}\)]\s*)[a-zA-Z]{3,}(\.|DOT|\s(dot|DOT)\s|\s*[\[\(\{]\s*(dot|DOT)\s*[\]\}\)]\s^*)[a-zA-Z]{2,}((\.|DOT|\s(dot|DOT)\s|\s*[\[\(\{]\s*(dot|DOT)\s*[\]\}\)]\s*)[a-zA-Z]{2,})?$']
+  REGULAR_EMAILS = ['[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}']
+
+  @@patterns = REGULAR_EMAILS
 
   class << self
 
@@ -12,17 +15,17 @@ class EmailFinder
 
     def find_all_emails(page)
 
+      # @@patterns = DOTTED_EMAILS
+
       body = page.body.scrub
 
       results = []
 
       @@patterns.each do |pattern|
-        # results += body.match(/#{pattern}/i).to_a
-        results += body.match(/[a-zA-Z0-9\._\-]{3,}(@|AT|\s(at|AT)\s|\s*[\[\(\{]\s*(at|AT)\s*[\]\}\)]\s*)[a-zA-Z]{3,}(\.|DOT|\s(dot|DOT)\s|\s*[\[\(\{]\s*(dot|DOT)\s*[\]\}\)]\s^*)[a-zA-Z]{2,}((\.|DOT|\s(dot|DOT)\s|\s*[\[\(\{]\s*(dot|DOT)\s*[\]\}\)]\s*)[a-zA-Z]{2,})?$/).to_a
+        matches = body.match(/#{pattern}/i).to_a
+        results << matches[0]
       end
 
-
-      # results  = [] << regular_emails[0] << at_and_dotted_emails[0]
       results.compact
     end
 
