@@ -1,8 +1,7 @@
 class EmailFinder
-  DOTTED_EMAILS = ['[a-zA-Z0-9\._\-]{3,}(@|AT|\s(at|AT)\s|\s*[\[\(\{]\s*(at|AT)\s*[\]\}\)]\s*)[a-zA-Z]{3,}(\.|DOT|\s(dot|DOT)\s|\s*[\[\(\{]\s*(dot|DOT)\s*[\]\}\)]\s^*)[a-zA-Z]{2,}((\.|DOT|\s(dot|DOT)\s|\s*[\[\(\{]\s*(dot|DOT)\s*[\]\}\)]\s*)[a-zA-Z]{2,})?$']
+  DOTTED_EMAILS = ['[A-Z0-9._%+-]{3,}(@|\s@\s|AT|\sAT\s|(\s*)?[\<\[\(\{]\s*(@|AT)\s*[\]\}\)\>](\s*)?)[A-Z]{3,}(\.|DOT|\sDOT\s|(\s*)?[\<\[\(\{]\s*(\.|DOT)\s*[\]\}\)\>](\s*)?)[A-Z]{2,}((\.|DOT|\sDOT\s|(\s*)?[\<\[\(\{]\s*(\.|DOT)\s*[\]\}\)\>](\s*)?)[A-Z]{2,4})?$']
   REGULAR_EMAILS = ['[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}']
-
-  @@patterns = REGULAR_EMAILS
+  @@patterns = DOTTED_EMAILS + REGULAR_EMAILS
 
   class << self
 
@@ -15,9 +14,7 @@ class EmailFinder
 
     def find_all_emails(page)
 
-      # @@patterns = DOTTED_EMAILS
-
-      body = page.body.scrub
+      body = page.body.scrub #remove illegal or unparsable characters
 
       results = []
 
@@ -26,7 +23,7 @@ class EmailFinder
         results << matches[0]
       end
 
-      results.compact
+      results.uniq.compact
     end
 
     def find_whitelisted_emails(page)
