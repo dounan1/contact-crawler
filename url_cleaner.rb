@@ -5,6 +5,7 @@ class UrlCleaner
 
     # makes the domain named into what typically is redirected to - lowercased, with and without www
     def friendly(url)
+      return [] if url.nil?
 
       lowercase_url = url.downcase
 
