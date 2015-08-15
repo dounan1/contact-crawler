@@ -12,6 +12,8 @@ class ContactCrawler
 
     def crawl(site, urls, email_patterns, limit, username)
 
+      return if bad_site(site)
+
       Anemone.crawl(urls, discard_page_bodies: true, depth_limit: 4, skip_query_strings: true, ) do |anemone|
 
         anemone.focus_crawl { |page| permitted_urls(page, limit) }
@@ -34,6 +36,10 @@ class ContactCrawler
 
       p 'doc nil? ' + page.doc.nil?.to_s
       p 'body nil? ' + page.body.nil?.to_s
+    end
+
+    def bad_site(site)
+      site.nil? || site.include?('|')
     end
 
     def permitted_urls(page, limit)
