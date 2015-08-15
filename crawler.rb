@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'csv'
-require './contact_crawler'
-require './sites'
+require_relative 'contact_crawler'
+require_relative 'sites'
 
 class Crawler
   class << self

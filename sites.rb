@@ -1,5 +1,5 @@
 require 'csv'
-require './url_cleaner'
+require_relative 'url_cleaner'
 
 class Sites
   class << self

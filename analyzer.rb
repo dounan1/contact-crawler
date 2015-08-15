@@ -1,6 +1,6 @@
-require './email_finder'
-require './form_finder'
-require './result'
+require_relative 'email_finder'
+require_relative 'form_finder'
+require_relative 'result'
 
 class Analyzer
   class << self

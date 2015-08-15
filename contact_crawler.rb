@@ -1,6 +1,6 @@
 require 'anemone'
-require './csv_writer'
-require './analyzer'
+require_relative 'csv_writer'
+require_relative 'analyzer'
 
 
 class ContactCrawler
