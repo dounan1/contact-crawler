@@ -1,14 +1,22 @@
 class EmailFinder
+  attr_accessor :patterns
+
   DOTTED_EMAILS = ['[A-Z0-9._%+-]{3,}(@|\s@\s|AT|\sAT\s|(\s*)?[\<\[\(\{]\s*(@|AT)\s*[\]\}\)\>](\s*)?)[A-Z]{3,}(\.|DOT|\sDOT\s|(\s*)?[\<\[\(\{]\s*(\.|DOT)\s*[\]\}\)\>](\s*)?)[A-Z]{2,}((\.|DOT|\sDOT\s|(\s*)?[\<\[\(\{]\s*(\.|DOT)\s*[\]\}\)\>](\s*)?)[A-Z]{2,4})?$']
   REGULAR_EMAILS = ['[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}']
-  @patterns = DOTTED_EMAILS + REGULAR_EMAILS
+
+  def initialize
+    @patterns = DOTTED_EMAILS + REGULAR_EMAILS
+  end
 
   class << self
-    attr_accessor :patterns
+
+    def finder
+      @finder ||= EmailFinder.new
+    end
 
     def find_emails(page, email_patterns)
       return [] if page.body.nil?
-      patterns = email_patterns unless email_patterns.nil?
+      finder.patterns = email_patterns unless email_patterns.nil?
 
       find_all_emails(page)
     end
@@ -19,7 +27,7 @@ class EmailFinder
 
       results = []
 
-      patterns.each do |pattern|
+      finder.patterns.each do |pattern|
         matches = body.match(/#{pattern}/i).to_a
         results << matches[0]
       end
