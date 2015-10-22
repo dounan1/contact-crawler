@@ -2,6 +2,17 @@ require 'anemone'
 require_relative 'csv_writer'
 require_relative 'analyzer'
 
+module Anemone
+  class Page
+    #
+    # Returns +true+ if *uri* is in the same domain as the page, returns
+    # +false+ otherwise
+    #
+    def in_domain?(uri)
+      (uri.host).downcase.include?(@url.host.downcase)
+    end
+  end
+end
 
 class ContactCrawler
   PATH_BLACKLIST = ['.jpg', '.pdf', '.gif', '.png'] # want contact.php or .asp, but not any unparsable files
